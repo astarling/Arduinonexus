@@ -29,7 +29,7 @@ Lastest release: v0.1.0
 
 ## The Nexus protocol
 
-*The description of the protocol description was obtained from [nexus433](https://github.com/aquaticus/nexus433), a program for receiving info encoded using the Nexus Protocol, but the original description was missing a trailing `0`.*
+*The description of the protocol was obtained from [nexus433](https://github.com/aquaticus/nexus433), a program for receiving info encoded using the Nexus Protocol, but the original description was missing a trailing `0`.*
 
 A device sends every minute or so (Sencor every 58 seconds, Digoo every 80 seconds) 12 data frames.
 
