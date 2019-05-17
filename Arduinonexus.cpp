@@ -7,76 +7,91 @@
 #include "Arduino.h"
 #include "Arduinonexus.h"
 
-Arduinonexus::Arduinonexus(int p, int ch, int i, int b){
+// #define DEBUG
+
+Arduinonexus::Arduinonexus(int p, int ch, int i){
   pinMode(p, OUTPUT);
   pin = p;
   channel = ch;
   id = i;
-  battery = b;
-
+  
 }
 
-void Arduinonexus::send(float temp, float humidity){
-  String msg = _parse(channel, id, battery, temp, humidity);
-  char buffer[37];
-  msg.toCharArray(buffer, 37);
-
+void Arduinonexus::send(float temperature, float humidity, int battery){
+  uint64_t packet = _parse(id, battery, channel, temperature, humidity);
+  bitClear(packet, 36);
+  #ifdef DEBUG
+  Serial.print("Raw: ~0x");
+  Serial.println((unsigned long) packet, HEX);
+  Serial.print("Bin: ");
+  Serial.println((unsigned long) packet, BIN);
+  #endif 
+  
   for(int i=0; i<13; i++){
+    int bit;
     digitalWrite(pin, LOW);
     delayMicroseconds(4000);
-    for(int i=0; i<37; i++){
-      if(msg[i] == '1'){
+    for(int j=35; j>=0; j--){
+      bit = (packet >> j) & 1;
+      if(bit == 1){
+
+        #ifdef DEBUG
+          Serial.print(1);
+        #endif
+
         _one(pin);
+
       }
       else{
+
+        #ifdef DEBUG
+          Serial.print(0);
+        #endif
+
         _zero(pin);
       }
     }
-  }  
+
+    _zero(pin); // traling 0
+
+    #ifdef DEBUG
+      Serial.print(0);
+      Serial.println("");
+    #endif
+  } 
 }
 
-String Arduinonexus::_pad(String s, int l) {
-  String padding = "";
-  int size = l - s.length();
+uint64_t Arduinonexus::_parse(int id, int battery, int channel, float temp, float hum){
+  uint64_t packet = 0;
+  int temperature = temp * 10;
+  int humidity = hum;
 
-  for(int i=0; i<size; i++){
-    padding += "0";
-  }
-  return padding + s;
-}
+  packet = (packet << 8) | id;
+  packet = (packet << 1) | battery;
+  packet = (packet << 1); // 1 bit 0 padding
+  packet = (packet << 2) | channel;
+  packet = (packet << 12) | temperature;
+  packet = (packet << 4) | 15; // 4 bits 1 padding 
+  packet = (packet << 8) | humidity;
 
-String Arduinonexus::_parse(int channel, int id, int battery, float temp, float humidity){
-  String s_id = _pad(String(id, BIN), 8);
-  String s_battery = String(battery);
-  String s_channel = _pad(String(channel, BIN), 2);
-  String s_temp;
-  if(temp < 0){
-    s_temp = _pad(String(int(temp * 10), BIN), 12).substring(4);      
-  }
-  else{
-    s_temp = _pad(String(int(temp * 10), BIN), 12);
-  }
-  String s_humidity = _pad(String(int(humidity), BIN), 8);
-  
-  //         id     Battery      padding      channel     temperature     padding        humidity     padding
-  //bits      8        1            1            2             12            4               8           1 
-  //      00001110     1            0            01       000000001111      1111          00000111       0
-  //data      14       1                         2             1.50                          7   
-  String msg = s_id + s_battery + "0" + s_channel + s_temp + "1111" + s_humidity + "0";
-  Serial.println(msg);
-  return msg;
+  #ifdef DEBUG
+    Serial.println((unsigned long) packet, BIN);
+  #endif 
+
+  return packet;
+
 }
 
 void Arduinonexus::_one(int pin){
   digitalWrite(pin, HIGH);
   delayMicroseconds(500);
   digitalWrite(pin, LOW);
-  delayMicroseconds(2000);
+  delayMicroseconds(1800);
 }
 
 void Arduinonexus::_zero(int pin){
   digitalWrite(pin, HIGH);
   delayMicroseconds(500);
   digitalWrite(pin, LOW);
-  delayMicroseconds(1000);
+  delayMicroseconds(800);
 }

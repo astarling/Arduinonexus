@@ -7,14 +7,14 @@ int battery = 1; // Battery status (0 -> LOW or 1 -> OK)
 
 
 
-Arduinonexus nexus(10, 2, 14, 1);
+Arduinonexus nexus(pin, channel, id);
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
 }
 
 void loop() {
     
-  nexus.send(15.0, 32); 
+  nexus.send(15.0, 32, battery); 
   delay(10000);
 }

@@ -11,16 +11,17 @@
 
 class Arduinonexus {
 public:
-  Arduinonexus(int p, int ch, int i, int b);
-  void send(float temp, float humidity);
+  Arduinonexus(int p, int ch, int i);
+  void send(float temperature, float humidity, int battery);
   int pin;
   int channel;
   int id;
   int battery;
 
 private:
-  String _parse(int channel, int code, int battery, float temp, float humidity);
-  String _pad(String s, int l);
+  // String _parse(int channel, int code, int battery, float temp, float humidity);
+  uint64_t _parse(int id, int battery, int channel, float temp, float hum);
+  // String _pad(String s, int l);
   void _one(int pin);
   void _zero(int pin);
 };
