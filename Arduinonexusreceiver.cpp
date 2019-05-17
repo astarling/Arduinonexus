@@ -46,7 +46,7 @@ int getHumidity(long packet) {
 }
 
 void processPacket() {
-  for(unsigned i=1; i< bitsRead; i++) {
+  for(int i=1; i< bitsRead; i++) {
     unsigned duration = timings[i];
     if(duration > ONE) {
         packet = packet << 1;
@@ -69,7 +69,7 @@ void processPacket() {
   #endif
 
   if (packet == 0) {
-    for(unsigned i=0; i < bitsRead; i++)
+    for(int i=0; i < bitsRead; i++)
       Serial.println(timings[i]);
   }
 }
@@ -115,7 +115,7 @@ void handleInterrupt() {
 }
 
 int getId(uint64_t packet) {
-  uint8_t id = (packet >> 28) & 0xFF;
+  int id = (packet >> 28) & 0xFF;
   return id;
 }
 

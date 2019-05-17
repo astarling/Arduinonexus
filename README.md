@@ -58,10 +58,19 @@ There is a 4000 µs long low state period before every 37 bits.
 
 For sending temperature and humidity data to your weather station you will need to know the channel and id the other sensor is using, or set a pair. Once you know them you create and `Arduinonexus` object:
 
-	nexus = Arduinonexus(10, 2, 14, 1);
+	#include "Arduinonexus.h"
+
+  nexus = Arduinonexus(10, 2, 14, 1);
 	
 Where the parameters are: `Pin` where the transmitter is connected to, the `channel` used to send the data, the `id` and `battery` status. now you can send temperature and humidity data:
 
 	nexus.send(12.3, 25)
 	
 Once the sensor is sending data you can pair it with the weather station. For more info look the examples.
+
+
+### Arduinonexusreceiver
+
+Arduinonexusreceiver is an experimental library for capturing packages and decode them using the Nexus protocol. It's missing some features, but it can capture the package and show the station id, battery status, channel, temperature and humidity. Needs some kind of data validator. 
+
+There is a example called [`Simple.ino`](https://github.com/jorgegarciadev/Arduinonexus/blob/master/Examples/Recieve/Simple/Simple.ino), it shows how to capture and get the data.

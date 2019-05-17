@@ -3,11 +3,17 @@
 
 void setup() {
   Serial.begin(115200);
-  // init receaver pin and helps with noise
+
+  // inits receaver pin and helps with noise
   pinMode(2, OUTPUT);
   digitalWrite(2, LOW);
   pinMode(2, INPUT);
   digitalWrite(2, LOW);
+
+  // Visit https://www.arduino.cc/reference/en/language/functions/external-interrupts/attachinterrupt/
+  // to discover which pins support interrupts on Arduino boards and learning more about interrupts
+  // Visit https://www.esp8266.com/wiki/doku.php?id=esp8266_gpio_pin_allocations#interrupts
+  // On Esp8266 can be used any GPIO except for GPIO16
 
   attachInterrupt(digitalPinToInterrupt(2), handleInterrupt, CHANGE);
 }
