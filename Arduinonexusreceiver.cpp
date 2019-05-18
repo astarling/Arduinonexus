@@ -19,6 +19,7 @@ unsigned int packet_size = 37;
 long packet = 0;
 
 int getId(long packet) {
+  bitClear(packet, 36);
   int id = (packet >> 28) & 0xFF;
   return id;
 }
