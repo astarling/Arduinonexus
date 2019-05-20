@@ -9,6 +9,14 @@
 
 // #define DEBUG
 
+// This values where tested with an Arduino UNo R3 that has a 16Mhz clock
+// You shiuld tweak this values if you are using a microcontroller with
+// a different clock speed.
+
+int BITS_TART = 500;
+int ONE_DELAY = 1800;
+int ZERO_DELAY = 800;
+
 Arduinonexus::Arduinonexus(int p, int ch, int i){
   pinMode(p, OUTPUT);
   pin = p;
@@ -84,14 +92,14 @@ uint64_t Arduinonexus::_parse(int id, int battery, int channel, float temp, floa
 
 void Arduinonexus::_one(int pin){
   digitalWrite(pin, HIGH);
-  delayMicroseconds(500);
+  delayMicroseconds(BITS_TART);
   digitalWrite(pin, LOW);
-  delayMicroseconds(1800);
+  delayMicroseconds(ONE_DELAY);
 }
 
 void Arduinonexus::_zero(int pin){
   digitalWrite(pin, HIGH);
-  delayMicroseconds(500);
+  delayMicroseconds(BITS_TART);
   digitalWrite(pin, LOW);
-  delayMicroseconds(800);
+  delayMicroseconds(ZERO_DELAY);
 }
