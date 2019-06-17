@@ -12,7 +12,7 @@ This library takes a given temperature and humidity, encode them using the Nexus
 - An avr or esp8266 board
 - A sensor, any DHT or a bmp280
 - A 433Mhz transmitter
-- A weather station that supports the Nexus protocol, like this one[one](https://www.amazon.es/GARNI-WS-6760-estaci%C3%B3n-metereol%C3%B3gica/dp/B00PLNQ8KW) :
+- A weather station that supports the Nexus protocol, like this [one](https://www.amazon.es/GARNI-WS-6760-estaci%C3%B3n-metereol%C3%B3gica/dp/B00PLNQ8KW) :
 
 ![weather station](img/ws.jpg  "Weather Station")
 
@@ -60,11 +60,11 @@ For sending temperature and humidity data to your weather station you will need 
 
 	#include "Arduinonexus.h"
 
-  nexus = Arduinonexus(10, 2, 14, 1);
+  nexus = Arduinonexus(10, 2, 14);
 	
-Where the parameters are: `Pin` where the transmitter is connected to, the `channel` used to send the data, the `id` and `battery` status. now you can send temperature and humidity data:
+Where the parameters are: `Pin` where the transmitter is connected to, the `channel` used to send the data and the `id`. now you can send temperature and humidity data:
 
-	nexus.send(12.3, 25)
+	nexus.send(12.3, 25, 1)
 	
 Once the sensor is sending data you can pair it with the weather station. For more info look the examples.
 
